@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "skills-mcp"
+version = "0.1.0"
+description = "Agent-agnostic MCP server for Anthropic Agent Skills: discover, create, and execute SKILL.md skills on bare metal. Bring your own agent."
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=3.0.2",
+]
+
+[project.scripts]
+skills-mcp = "skills_mcp:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["skills_mcp"]

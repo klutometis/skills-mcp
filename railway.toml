@@ -1,0 +1,11 @@
+[build]
+builder = "dockerfile"
+
+[deploy]
+startCommand = "uv run skills-mcp"
+restartPolicyType = "always"
+
+# Set in the Railway service:
+#   SKILLS_DIR=/data/skills   (mount a volume at /data so authored skills persist)
+#   LIFX_TOKEN=...            (and any other secrets skills need)
+#   MCP_TRANSPORT=http        (default)
