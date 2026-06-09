@@ -50,7 +50,7 @@ Env:
 1. Agent: `list_skills()` → gap (no `lifx-control`).
 2. Agent: `create_skill("lifx-control", "<SKILL.md with the curl>")`.
 3. Agent: `bash('curl -X PUT https://api.lifx.com/v1/lights/all/state -H "Authorization: Bearer $LIFX_TOKEN" -d power=on')`.
-4. Light turns on. The agent (e.g. Spark) is the only brain — no second
+4. Light turns on. The orchestrator agent is the only brain — no second
    agent, no injected identity.
 
 ## Skill format
