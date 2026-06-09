@@ -18,8 +18,10 @@ available to the commands skills run.
 
 from __future__ import annotations
 
+import json
 import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -72,14 +74,15 @@ def _description(skill_md: Path) -> str:
 
 # --- discovery (tools, for tools-only clients) ---
 @mcp.tool
-def list_skills() -> list[dict]:
-    """List available skills with their one-line descriptions."""
+def list_skills() -> str:
+    """List available skills with their one-line descriptions (JSON array of
+    {name, description}). Returns '[]' when there are no skills yet."""
     out = []
     for d in sorted(SKILLS_DIR.iterdir()) if SKILLS_DIR.exists() else []:
         sm = d / "SKILL.md"
         if d.is_dir() and sm.exists():
             out.append({"name": d.name, "description": _description(sm)})
-    return out
+    return json.dumps(out)
 
 
 @mcp.tool
@@ -100,6 +103,17 @@ def create_skill(name: str, skill_md: str) -> str:
     d.mkdir(parents=True, exist_ok=True)
     (d / "SKILL.md").write_text(skill_md, encoding="utf-8")
     return f"skill://{d.name}/SKILL.md"
+
+
+@mcp.tool
+def delete_skill(name: str) -> str:
+    """Delete a skill (its whole directory). Use to reset / clean up, e.g. to
+    rehearse the 'learn a skill live' loop from a clean slate."""
+    d = SKILLS_DIR / _safe_name(name)
+    if not d.exists():
+        raise FileNotFoundError(f"no skill named {name!r}")
+    shutil.rmtree(d)
+    return f"deleted {name}"
 
 
 @mcp.tool
