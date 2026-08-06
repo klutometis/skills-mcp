@@ -18,7 +18,9 @@ RUN uv sync
 # container is the sandbox; this just removes the free privilege escalation
 # inside it (writing /etc, apt-get install, reading root-owned paths).
 # uid 1000 must own the volume mount too -- see the chown in the entrypoint.
-RUN useradd -m -u 1000 skills
+# /app itself must be readable by that uid or `uv run` can't read
+# pyproject.toml / .venv and the container crash-loops.
+RUN useradd -m -u 1000 skills && chown -R 1000:1000 /app
 
 # Skills live on a persistent volume in prod so authored skills survive
 # redeploys. Mount a Railway volume at /data and set SKILLS_DIR=/data/skills.
