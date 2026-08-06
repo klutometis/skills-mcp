@@ -19,4 +19,9 @@ if [ -d /app/skills ] && [ -z "$(ls -A "$SKILLS_DIR" 2>/dev/null)" ]; then
     chown -R 1000:1000 "$SKILLS_DIR" 2>/dev/null || true
 fi
 
+# setpriv keeps the current environment, so HOME would still be /root --
+# unwritable once we drop privileges, which breaks anything that caches
+# under it. Point it at the skills user's own home.
+export HOME=/home/skills
+
 exec setpriv --reuid=1000 --regid=1000 --clear-groups "$@"

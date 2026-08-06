@@ -34,4 +34,9 @@ EXPOSE 8000
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["uv", "run", "skills-mcp"]
+
+# Exec the venv console script directly rather than `uv run`. uv wants a
+# writable cache under $HOME at startup, which it doesn't have after we
+# drop privileges; the venv is already built at image time, so uv has no
+# job left to do here.
+CMD ["/app/.venv/bin/skills-mcp"]
