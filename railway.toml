@@ -2,10 +2,15 @@
 builder = "dockerfile"
 
 [deploy]
-startCommand = "uv run skills-mcp"
+# No startCommand on purpose: Railway's startCommand replaces the image's
+# ENTRYPOINT, which is what chowns the volume and drops to uid 1000. Let
+# the Dockerfile's ENTRYPOINT + CMD run so agent-authored `bash` commands
+# don't execute as root.
 restartPolicyType = "always"
 
 # Set in the Railway service:
 #   SKILLS_DIR=/data/skills   (mount a volume at /data so authored skills persist)
+#   SKILLS_GATEWAY_TOKEN=...  (set = multi-tenant: require this bearer, tenant from baggage)
+#   SKILLS_ENV_PASSTHROUGH=LIFX_TOKEN,...  (only these cross into `bash`)
 #   LIFX_TOKEN=...            (and any other secrets skills need)
 #   MCP_TRANSPORT=http        (default)
