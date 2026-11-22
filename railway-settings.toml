@@ -1,3 +1,8 @@
+# Not read by Railway. Railway stopped reading railway.toml on 2026-12-01;
+# the build/deploy values below were copied into the service's own settings
+# on 2026-11-21 and live there now (change them in the Railway dashboard or
+# API). Kept as the record of those values and for the notes below.
+
 [build]
 builder = "dockerfile"
 
